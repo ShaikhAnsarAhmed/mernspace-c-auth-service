@@ -29,7 +29,7 @@ describe("POST auth/register", () => {
         firstName: "Ansar",
         lastName: "Shaikh",
         email: "ansar@gmail.com",
-        password: "secret",
+        password: "password",
       };
 
       // Act
@@ -43,7 +43,7 @@ describe("POST auth/register", () => {
         firstName: "Ansar",
         lastName: "Shaikh",
         email: "ansar@gmail.com",
-        password: "secret",
+        password: "password",
       };
 
       // Act
@@ -59,7 +59,7 @@ describe("POST auth/register", () => {
         firstName: "Ansar",
         lastName: "Shaikh",
         email: "ansar@gmail.com",
-        password: "secret",
+        password: "password",
       };
 
       // Act
@@ -72,13 +72,30 @@ describe("POST auth/register", () => {
       expect(users[0].lastName).toBe(userData.lastName);
       expect(users[0].email).toBe(userData.email);
     });
+    it("should return an id of the created user", async () => {
+      // Arrange
+      const userData = {
+        firstName: "Ansar",
+        lastName: "shaikh",
+        email: "rakesh@mern.space",
+        password: "password",
+      };
+      // Act
+      const response = await request(app).post("/auth/register").send(userData);
+
+      // Assert
+      expect(response.body).toHaveProperty("id");
+      const repository = connection.getRepository(User);
+      const users = await repository.find();
+      expect((response.body as Record<string, string>).id).toBe(users[0].id);
+    });
     it("should assign a customer role", async () => {
       // Arrange
       const userData = {
         firstName: "Ansar",
         lastName: "Shaikh",
         email: "ansar@gmail.com",
-        password: "secret",
+        password: "password",
       };
 
       // Act
@@ -95,7 +112,7 @@ describe("POST auth/register", () => {
         firstName: "Ansar",
         lastName: "Shaikh",
         email: "ansar@gmail.com",
-        password: "secret",
+        password: "password",
       };
 
       // Act
@@ -113,7 +130,7 @@ describe("POST auth/register", () => {
         firstName: "Ansar",
         lastName: "Shaikh",
         email: "ansar@gmail.com",
-        password: "secret",
+        password: "password",
       };
       const userRepository = connection.getRepository(User);
       await userRepository.save({ ...userData, role: Roles.CUSTOMER });
@@ -134,7 +151,7 @@ describe("POST auth/register", () => {
         firstName: "Ansar",
         lastName: "Shaikh",
         email: "",
-        password: "secret",
+        password: "password",
       };
 
       // Act
@@ -145,6 +162,45 @@ describe("POST auth/register", () => {
       const users = await userRepository.find();
       expect(users).toHaveLength(0);
     });
+    it("should return a status code 400 if firstName is missing", async () => {
+      // Arrange
+      const userData = {
+        firstName: "",
+        lastName: "Shaikh",
+        email: "ansarahmedn@gmail.com",
+        password: "password",
+      };
+      // Act
+      const response = await request(app).post("/auth/register").send(userData);
+      // Assert
+      expect(response.statusCode).toBe(400);
+    });
+    it("should return a status code 400 if lastName is missing", async () => {
+      // Arrange
+      const userData = {
+        firstName: "Ansar",
+        lastName: "",
+        email: "ansarahmedn@gmail.com",
+        password: "password",
+      };
+      // Act
+      const response = await request(app).post("/auth/register").send(userData);
+      // Assert
+      expect(response.statusCode).toBe(400);
+    });
+    it("should return a status code 400 if password is missing", async () => {
+      // Arrange
+      const userData = {
+        firstName: "Ansar",
+        lastName: "Shaikh",
+        email: "ansarahmedn@gmail.com",
+        password: "",
+      };
+      // Act
+      const response = await request(app).post("/auth/register").send(userData);
+      // Assert
+      expect(response.statusCode).toBe(400);
+    });
   });
   describe("fields are not in proper format", () => {
     it("should trim the email field", async () => {
@@ -153,7 +209,7 @@ describe("POST auth/register", () => {
         firstName: "Ansar",
         lastName: "Shaikh",
         email: " ansarahmedn@gmail.com ",
-        password: "secret",
+        password: "password",
       };
 
       // Act
@@ -163,6 +219,41 @@ describe("POST auth/register", () => {
       const users = await userRepository.find();
       const user = users[0];
       expect(user.email).toBe("ansarahmedn@gmail.com");
+    });
+    it("should return 400 status code if email is not a valid email", async () => {
+      // Arrange
+      const userData = {
+        firstName: "ansar",
+        lastName: "shaikh",
+        email: "rakesh_mern.space", // Invalid email
+        password: "password",
+      };
+      // Act
+      const response = await request(app).post("/auth/register").send(userData);
+
+      // Assert
+      expect(response.statusCode).toBe(400);
+      const userRepository = connection.getRepository(User);
+      const users = await userRepository.find();
+      expect(users).toHaveLength(0);
+    });
+    it("should return 400 status code if password length is less than 8 chars", async () => {
+      // Arrange
+      const userData = {
+        firstName: "Ansar",
+        lastName: "shaikh",
+        email: "rakesh@mern.space",
+        password: "pass", // less than 8 chars
+      };
+      // Act
+      const response = await request(app).post("/auth/register").send(userData);
+      // console.log(response.body);
+
+      // Assert
+      expect(response.statusCode).toBe(400);
+      const userRepository = connection.getRepository(User);
+      const users = await userRepository.find();
+      expect(users).toHaveLength(0);
     });
   });
 });
