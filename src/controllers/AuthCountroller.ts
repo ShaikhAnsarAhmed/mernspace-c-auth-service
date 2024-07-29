@@ -52,6 +52,7 @@ export class AuthController {
         sub: String(user.id),
         role: user.role,
       };
+
       const accessToken = sign(payload, privateKey, {
         algorithm: "RS256",
         expiresIn: "1hr",
