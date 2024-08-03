@@ -9,3 +9,9 @@ export interface userData {
 export interface registerUserRequest extends Request {
   body: userData;
 }
+
+export interface TokenPayload {
+  sub: string;
+  payload: string;
+  role: string;
+}
