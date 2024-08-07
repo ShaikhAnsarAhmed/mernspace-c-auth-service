@@ -7,6 +7,9 @@ import logger from "../config/logger";
 import { TenantService } from "../services/TenantService";
 import { TenantController } from "../controllers/TenantController";
 import { CreateTenantRequest } from "../types";
+import authenticate from "../middlewares/authenticate";
+import { canAccess } from "../middlewares/canAccess";
+import { Roles } from "../constants";
 
 const router = express.Router();
 
@@ -16,6 +19,8 @@ const tenantController = new TenantController(tenantService, logger);
 
 router.post(
   "/",
+  authenticate,
+  canAccess([Roles.ADMIN]),
   (req: CreateTenantRequest, res: Response, next: NextFunction) =>
     tenantController.create(req, res, next) as unknown as RequestHandler,
 );
