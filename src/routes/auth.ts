@@ -1,4 +1,9 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, {
+  NextFunction,
+  Request,
+  RequestHandler,
+  Response,
+} from "express";
 import { AuthController } from "../controllers/AuthCountroller";
 import { UserService } from "../services/UserService";
 import { AppDataSource } from "../config/data-source";
@@ -39,8 +44,11 @@ router.post(
   async (req: Request, res: Response, next: NextFunction) =>
     await authController.login(req, res, next),
 );
-router.get("/self", authenticate, (req: Request, res: Response) =>
-  authController.self(req as AuthRequest, res),
+router.get(
+  "/self",
+  authenticate as RequestHandler,
+  (req: Request, res: Response) =>
+    authController.self(req as AuthRequest, res) as unknown as RequestHandler,
 );
 router.post(
   "/refresh",
