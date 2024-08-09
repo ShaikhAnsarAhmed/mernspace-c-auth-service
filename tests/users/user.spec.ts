@@ -45,7 +45,7 @@ describe("GET auth/self", () => {
       const userData = {
         firstName: "Ansar",
         lastName: "Shaikh",
-        email: " ansarahmedn@gmail.com ",
+        email: "ansarahmedn@gmail.com",
         password: "password",
       };
       const userRepository = connection.getRepository(User);
@@ -99,7 +99,7 @@ describe("GET auth/self", () => {
       const userData = {
         firstName: "Ansar",
         lastName: "Shaikh",
-        email: " ansarahmedn@gmail.com ",
+        email: "ansarahmedn@gmail.com",
         password: "password",
       };
       const userRepository = connection.getRepository(User);
