@@ -14,6 +14,7 @@ const {
   JWKS_URI,
   DB_NAME,
   REFRESH_TOKEN_SECRET,
+  PRIVATE_KEY,
 } = process.env;
 
 export const Config = {
@@ -26,4 +27,5 @@ export const Config = {
   JWKS_URI,
   DB_NAME,
   REFRESH_TOKEN_SECRET,
+  PRIVATE_KEY,
 };
