@@ -13,12 +13,12 @@ import logger from "../config/logger";
 import registerValidator from "../validators/register-validator";
 import { TokenService } from "../services/TokenService";
 import { RefreshToken } from "../entity/RefreshToken";
-import loginValidators from "../validators/login-validators";
 import { CredentialService } from "../services/CredentialService";
 import authenticate from "../middlewares/authenticate";
 import { AuthRequest } from "../types";
 import validateRefreshToken from "../middlewares/validateRefreshToken";
 import parseRefreshToken from "../middlewares/parseRefreshToken";
+import loginValidator from "../validators/login-validator";
 
 const router = express.Router();
 const userRepository = AppDataSource.getRepository(User);
@@ -41,7 +41,7 @@ router.post(
 );
 router.post(
   "/login",
-  loginValidators,
+  loginValidator,
   async (req: Request, res: Response, next: NextFunction) =>
     await authController.login(req, res, next),
 );
