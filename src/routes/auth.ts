@@ -36,14 +36,14 @@ const authController = new AuthController(
 router.post(
   "/register",
   registerValidator,
-  async (req: Request, res: Response, next: NextFunction) =>
-    await authController.register(req, res, next),
+  (req: Request, res: Response, next: NextFunction) =>
+    authController.register(req, res, next) as unknown as RequestHandler,
 );
 router.post(
   "/login",
   loginValidator,
-  async (req: Request, res: Response, next: NextFunction) =>
-    await authController.login(req, res, next),
+  (req: Request, res: Response, next: NextFunction) =>
+    authController.login(req, res, next) as unknown as RequestHandler,
 );
 router.get(
   "/self",
@@ -53,16 +53,24 @@ router.get(
 );
 router.post(
   "/refresh",
-  validateRefreshToken,
+  validateRefreshToken as RequestHandler,
   (req: Request, res: Response, next: NextFunction) =>
-    authController.refresh(req as AuthRequest, res, next),
+    authController.refresh(
+      req as AuthRequest,
+      res,
+      next,
+    ) as unknown as RequestHandler,
 );
 router.post(
   "/logout",
   authenticate as RequestHandler,
-  parseRefreshToken,
+  parseRefreshToken as RequestHandler,
   (req: Request, res: Response, next: NextFunction) =>
-    authController.logout(req as AuthRequest, res, next),
+    authController.logout(
+      req as AuthRequest,
+      res,
+      next,
+    ) as unknown as RequestHandler,
 );
 
 export default router;

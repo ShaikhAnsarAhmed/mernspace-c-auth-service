@@ -4,3 +4,5 @@ node_modules
 *.spec.ts
 
 tests/
+
+.github
